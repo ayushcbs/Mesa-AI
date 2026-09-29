@@ -1,0 +1,11 @@
+{
+  "name": "Mesa Workspace Intelligence",
+  "description": "A professional-grade workspace intelligence and spatial ergonomics platform for architects, interior designers, workspace consultants, and design-focused businesses.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "photoURL": { "type": "string", "description": "User profile photo URL" },
+        "usageCount": { "type": "integer", "description": "Number of analyses performed" },
+        "credits": { "type": "integer", "description": "Current available credits (resets daily)" },
+        "creditsLastReset": { "type": "string", "format": "date-time", "description": "Last time credits were reset" },
+        "isPremium": { "type": "boolean", "description": "Whether the user has a premium subscription" },
+        "trialEndsAt": { "type": "string", "format": "date-time", "description": "Timestamp when the free trial ends" },
+        "trialStartedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the free trial started" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when user was created" },
+        "academicContext": {
+          "type": "object",
+          "properties": {
+            "gradeLevel": { "type": "string" },
+            "currentGPA": { "type": "string" },
+            "targetCareer": { "type": "string" }
+          }
+        },
+        "examCalendar": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "subject": { "type": "string" },
+              "paperType": { "type": "string" },
+              "examDate": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "Analysis": {
+      "title": "Study Space Analysis",
+      "description": "Results of a study space analysis",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Owner user ID" },
+        "imageUrl": { "type": "string", "description": "Base64 or URL of the analyzed image" },
+        "generatedImageUrl": { "type": "string", "description": "URL of the AI generated improved space image" },
+        "result": { "type": "string", "description": "AI generated analysis text" },
+        "spaceDetails": {
+          "type": "object",
+          "properties": {
+            "deskDimensions": { "type": "string" },
+            "lighting": { "type": "string" },
+            "chairType": { "type": "string" },
+            "comfortNeeds": { "type": "string" }
+          }
+        },
+        "plants": {
+          "type": "array",
+          "description": "Elite feature: Plant recommendations",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "why": { "type": "string" },
+              "care": { "type": "string" }
+            }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when analysis was performed" }
+      },
+      "required": ["uid", "result", "createdAt"]
+    },
+    "Goal": {
+      "title": "Study Goal / Task",
+      "description": "A specific study target or workspace task for the user",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string", "description": "Goal description" },
+        "status": { "type": "string", "enum": ["pending", "completed"], "description": "Current status of the goal" },
+        "targetDate": { "type": "string", "format": "date-time", "description": "When the goal is intended to be finished" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"], "description": "Priority level of the task" },
+        "category": { "type": "string", "description": "Category tag e.g. Study Goal, Ergonomics, Exam Prep" },
+        "profileId": { "type": "string", "description": "Associated study space profile ID" },
+        "estimatedDuration": { "type": "integer", "description": "Estimated duration to complete the task in minutes" },
+        "timeSpent": { "type": "integer", "description": "Minutes logged or spent on this task" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when goal was created" }
+      },
+      "required": ["text", "status", "createdAt"]
+    },
+    "StudyProfile": {
+      "title": "Study Space Profile",
+      "description": "User's customizable study space profile to save analysis results and ergonomic preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique profile identifier" },
+        "name": { "type": "string", "description": "Profile name (e.g. Main Desk, Dorm Room, Library)" },
+        "studyFocus": { "type": "string", "description": "Academic major or primary study focus" },
+        "deskDimensions": { "type": "string", "description": "Desk physical scale and dimensions" },
+        "lighting": { "type": "string", "description": "Preferred lighting environment" },
+        "chairType": { "type": "string", "description": "Chair or seating mechanics" },
+        "comfortNeeds": { "type": "string", "description": "Comfort relief and strain targeting priorities" },
+        "isDefault": { "type": "boolean", "description": "Whether this profile is default" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Created timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Updated timestamp" }
+      },
+      "required": ["name"]
+    },
+    "Project": {
+      "title": "Client Project",
+      "description": "User's client engagement spatial project",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string" },
+        "projectName": { "type": "string" },
+        "workspaceType": { "type": "string" },
+        "dimensions": { "type": "string" },
+        "notes": { "type": "string" },
+        "beforeImageUrl": { "type": "string" },
+        "afterImageUrl": { "type": "string" },
+        "scores": { "type": "object" },
+        "annotations": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientName", "projectName"]
+    },
+    "ConsultLead": {
+      "title": "Consultation Lead",
+      "description": "Marketplace consultation leads and inquiries",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string" },
+        "clientEmail": { "type": "string" },
+        "clientPhone": { "type": "string" },
+        "workspaceType": { "type": "string" },
+        "dimensions": { "type": "string" },
+        "specialistNeeded": { "type": "string" },
+        "notes": { "type": "string" },
+        "status": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientName", "clientEmail", "status"]
+    },
+    "Specialist": {
+      "title": "Spatial Specialist",
+      "description": "Registered spatial architect or consultant",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "firm": { "type": "string" },
+        "role": { "type": "string" },
+        "specialty": { "type": "string" },
+        "specialtyLabel": { "type": "string" },
+        "location": { "type": "string" },
+        "rating": { "type": "number" },
+        "completedJobs": { "type": "integer" },
+        "hourlyRate": { "type": "integer" },
+        "bio": { "type": "string" },
+        "avatar": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "specialty"]
+    },
+    "TestConnection": {
+      "title": "Test Connection",
+      "description": "Diagnostic ping document",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/analyses/{analysisId}": {
+      "schema": "Analysis",
+      "description": "User's study space analyses"
+    },
+    "/users/{userId}/study_profiles/{profileId}": {
+      "schema": "StudyProfile",
+      "description": "User's customizable study space profiles and preferences"
+    },
+    "/users/{userId}/goals/{goalId}": {
+      "schema": "Goal",
+      "description": "User's study goals"
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": "Project",
+      "description": "User's corporate spatial projects"
+    },
+    "/consult_leads/{leadId}": {
+      "schema": "ConsultLead",
+      "description": "Marketplace consultation leads"
+    },
+    "/specialists/{specialistId}": {
+      "schema": "Specialist",
+      "description": "Directory of spatial specialists and consultants"
+    },
+    "/test/{docId}": {
+      "schema": "TestConnection",
+      "description": "Firestore connection diagnostic ping"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# API endpoint redirects to Netlify Serverless Functions
+/api/create-checkout-session    /.netlify/functions/create-checkout-session    200
+/api/feedback                   /.netlify/functions/feedback                   200
+/api/gemini/generate            /.netlify/functions/gemini-generate            200
+/api/*                          /.netlify/functions/api/:splat                 200
+
+# Protect server bundle from static public CDN delivery
+/server.cjs*                    /index.html                                    404!
+
+# Single Page Application (SPA) fallback to index.html
+/*                              /index.html                                    200

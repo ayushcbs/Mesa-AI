@@ -1,0 +1,161 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "urfaceismylife@gmail.com" ||
+         request.auth.token.get('role', 'user') == 'admin');
+    }
+
+    function isValidUser(data) {
+      return (!('uid' in data) || (data.uid == null || data.uid == request.auth.uid)) &&
+             (!('email' in data) || (data.email == null || data.email is string)) &&
+             (!('displayName' in data) || (data.displayName == null || data.displayName is string)) &&
+             (!('photoURL' in data) || (data.photoURL == null || data.photoURL is string)) &&
+             (!('role' in data) || (data.role is string && data.role in ['admin', 'user'])) &&
+             (!('tier' in data) || (data.tier is string && data.tier in ['free', 'pro', 'elite', 'corporate'])) &&
+             (!('usageCount' in data) || data.usageCount is number) &&
+             (!('isPremium' in data) || data.isPremium is bool) &&
+             (!('hasInfiniteCredits' in data) || data.hasInfiniteCredits is bool) &&
+             (!('credits' in data) || data.credits is number) &&
+             (!('creditsLastReset' in data) || (data.creditsLastReset == null || data.creditsLastReset is timestamp)) &&
+             (!('updatedAt' in data) || (data.updatedAt == null || data.updatedAt is timestamp)) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp)) &&
+             (!('trialStartedAt' in data) || (data.trialStartedAt == null || data.trialStartedAt is timestamp)) &&
+             (!('trialEndsAt' in data) || (data.trialEndsAt == null || data.trialEndsAt is timestamp)) &&
+             (!('academicContext' in data) || data.academicContext is map) &&
+             (!('examCalendar' in data) || data.examCalendar is list) &&
+             (!('unlockedPersonalization' in data) || data.unlockedPersonalization is list) &&
+             (!('unlockedFocus' in data) || data.unlockedFocus is bool) &&
+             (!('unlockedAdvisory' in data) || data.unlockedAdvisory is bool);
+    }
+
+    function isValidAnalysis(data, userId) {
+      return (!('uid' in data) || (data.uid == null || data.uid == userId)) &&
+             (!('projectId' in data) || (data.projectId == null || data.projectId is string)) &&
+             (!('profileId' in data) || (data.profileId == null || data.profileId is string)) &&
+             (!('result' in data) || (data.result == null || data.result is string)) &&
+             (!('imageUrl' in data) || (data.imageUrl == null || data.imageUrl is string)) &&
+             (!('generatedImageUrl' in data) || (data.generatedImageUrl == null || data.generatedImageUrl is string)) &&
+             (!('spaceDetails' in data) || data.spaceDetails is map) &&
+             (!('plants' in data) || data.plants is list) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp));
+    }
+
+    function isValidGoal(data) {
+      return (!('text' in data) || (data.text is string && data.text.size() > 0 && data.text.size() <= 500)) &&
+             (!('status' in data) || (data.status is string && data.status in ['pending', 'completed'])) &&
+             (!('targetDate' in data) || (data.targetDate == null || data.targetDate is timestamp)) &&
+             (!('priority' in data) || (data.priority == null || (data.priority is string && data.priority in ['low', 'medium', 'high']))) &&
+             (!('category' in data) || (data.category == null || data.category is string)) &&
+             (!('profileId' in data) || (data.profileId == null || data.profileId is string)) &&
+             (!('estimatedDuration' in data) || (data.estimatedDuration == null || data.estimatedDuration is number)) &&
+             (!('timeSpent' in data) || (data.timeSpent == null || data.timeSpent is number)) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp));
+    }
+
+    function isValidStudyProfile(data) {
+      return (!('id' in data) || (data.id == null || data.id is string)) &&
+             (!('name' in data) || (data.name is string && data.name.size() > 0 && data.name.size() <= 100)) &&
+             (!('studyFocus' in data) || (data.studyFocus == null || data.studyFocus is string)) &&
+             (!('deskDimensions' in data) || (data.deskDimensions == null || data.deskDimensions is string)) &&
+             (!('lighting' in data) || (data.lighting == null || data.lighting is string)) &&
+             (!('chairType' in data) || (data.chairType == null || data.chairType is string)) &&
+             (!('comfortNeeds' in data) || (data.comfortNeeds == null || data.comfortNeeds is string)) &&
+             (!('isDefault' in data) || data.isDefault is bool) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp)) &&
+             (!('updatedAt' in data) || (data.updatedAt == null || data.updatedAt is timestamp));
+    }
+
+    function isValidProject(data) {
+      return (!('id' in data) || (data.id == null || data.id is string)) &&
+             (!('clientName' in data) || (data.clientName == null || data.clientName is string)) &&
+             (!('projectName' in data) || (data.projectName == null || data.projectName is string)) &&
+             (!('workspaceType' in data) || (data.workspaceType == null || data.workspaceType is string)) &&
+             (!('dimensions' in data) || (data.dimensions == null || data.dimensions is string)) &&
+             (!('notes' in data) || (data.notes == null || data.notes is string)) &&
+             (!('beforeImageUrl' in data) || (data.beforeImageUrl == null || data.beforeImageUrl is string)) &&
+             (!('afterImageUrl' in data) || (data.afterImageUrl == null || data.afterImageUrl is string)) &&
+             (!('scores' in data) || data.scores is map) &&
+             (!('annotations' in data) || data.annotations is list) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp)) &&
+             (!('updatedAt' in data) || (data.updatedAt == null || data.updatedAt is timestamp));
+    }
+
+    function isValidLead(data) {
+      return (!('clientName' in data) || (data.clientName == null || data.clientName is string)) &&
+             (!('clientEmail' in data) || (data.clientEmail == null || data.clientEmail is string)) &&
+             (!('clientPhone' in data) || (data.clientPhone == null || data.clientPhone is string)) &&
+             (!('workspaceType' in data) || (data.workspaceType == null || data.workspaceType is string)) &&
+             (!('dimensions' in data) || (data.dimensions == null || data.dimensions is string)) &&
+             (!('specialistNeeded' in data) || (data.specialistNeeded == null || data.specialistNeeded is string)) &&
+             (!('notes' in data) || (data.notes == null || data.notes is string)) &&
+             (!('status' in data) || (data.status is string && data.status in ['new', 'contacted', 'assigned', 'closed'])) &&
+             (!('userId' in data) || (data.userId == null || data.userId is string)) &&
+             (!('createdAt' in data) || (data.createdAt == null || data.createdAt is timestamp)) &&
+             (!('updatedAt' in data) || (data.updatedAt == null || data.updatedAt is timestamp));
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && 
+                      (!('role' in request.resource.data) || request.resource.data.role == 'user' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && (isAdmin() || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+      allow delete: if isOwner(userId) || isAdmin();
+
+      match /analyses/{analysisId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidAnalysis(request.resource.data, userId);
+        allow update: if isOwner(userId) && isValidAnalysis(request.resource.data, userId);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /study_profiles/{profileId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidStudyProfile(request.resource.data);
+        allow update: if isOwner(userId) && isValidStudyProfile(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /goals/{goalId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidGoal(request.resource.data);
+        allow update: if isOwner(userId) && isValidGoal(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /projects/{projectId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidProject(request.resource.data);
+        allow update: if isOwner(userId) && isValidProject(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+    }
+
+    match /consult_leads/{leadId} {
+      allow read, create, update, delete: if isAuthenticated();
+    }
+
+    match /specialists/{specialistId} {
+      allow read, create, update, delete: if isAuthenticated();
+    }
+
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
