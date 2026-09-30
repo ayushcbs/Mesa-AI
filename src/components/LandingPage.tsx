@@ -25,11 +25,16 @@ import {
   Ruler
 } from 'lucide-react';
 
-export function LandingPage({ onLogin }: { onLogin: () => void }) {
+export function LandingPage({ onLogin, error }: { onLogin: () => void; error?: string | null }) {
   const [activeTab, setActiveTab] = useState<'designers' | 'studios' | 'academics'>('designers');
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-gray-900 font-sans selection:bg-stone-200 flex flex-col items-center">
+      {error && (
+        <div role="alert" className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-semibold text-red-800 shadow-lg">
+          {error}
+        </div>
+      )}
       {/* Premium Header */}
       <header className="w-full max-w-7xl px-6 py-6 flex items-center justify-between border-b border-stone-200/60 sticky top-0 bg-[#faf9f6]/95 backdrop-blur-md z-50">
         <div className="flex items-center gap-3">
