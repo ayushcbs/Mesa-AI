@@ -1076,7 +1076,7 @@ function AppContent() {
   }
 
   if (!user) {
-    return <LandingPage onLogin={login} />;
+    return <LandingPage onLogin={login} error={error} />;
   }
 
   if (showAdmin && user) {
